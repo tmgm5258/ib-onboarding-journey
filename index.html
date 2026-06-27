@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB partner onboarding journey</title>
+<style>
+  :root{
+    --bg:#0B0C0B;--card:#16181A;--icon-bg:#23262A;--border:rgba(255,255,255,0.10);
+    --track:rgba(255,255,255,0.11);--text:#F3F2ED;--text-2:#9B9A92;--text-3:#7E7D76;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--font);
+    -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;padding:5vh 24px;gap:clamp(26px,4vh,46px);position:relative}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 64% 52% at 50% 54%,rgba(43,199,154,0.09),transparent 70%)}
+  .head,.journey,.foot{position:relative;z-index:1}
+
+  .head{text-align:center;max-width:780px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;
+    letter-spacing:.04em;color:#2BC79A;margin:0 0 14px}
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:#2BC79A;box-shadow:0 0 10px 1px rgba(43,199,154,0.45)}
+  .head h1{margin:0;font-weight:600;line-height:1.15;color:var(--text);font-size:clamp(26px,3.4vw,42px);letter-spacing:-.01em}
+  .head p{margin:14px 0 0;color:var(--text-2);font-size:clamp(15px,1.5vw,18px);line-height:1.5}
+  .status{margin:16px auto 0;display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#E8C98A;background:rgba(232,176,75,.08);border:1px dashed rgba(232,176,75,.45);border-radius:999px;padding:6px 14px}
+  .status i{width:7px;height:7px;border-radius:50%;background:#E8B04B;display:inline-block;flex:0 0 auto}
+
+  .journey{display:flex;flex-direction:column;align-items:center;gap:0;width:100%;max-width:1000px}
+  .jrow{display:flex;align-items:stretch;justify-content:center;width:100%}
+  .mkt{--c:#2BC79A;--soft:rgba(43,199,154,.14);--glow:rgba(43,199,154,.38)}
+  .sal{--c:#E8B04B;--soft:rgba(232,176,75,.14);--glow:rgba(232,176,75,.38)}
+  .step{flex:1 1 0;min-width:175px;max-width:270px;display:flex}
+  .card{position:relative;flex:1;background:var(--card);border:0.5px solid var(--border);
+    border-radius:16px;padding:1.6rem 1.1rem 1.3rem;text-align:center;display:flex;flex-direction:column;
+    align-items:center;gap:13px;cursor:pointer;
+    transition:border-color .35s ease,box-shadow .45s ease,transform .35s ease}
+  .card:hover{border-color:rgba(255,255,255,.22)}
+  .card:focus-visible{outline:2px solid var(--c);outline-offset:3px}
+  .expand{position:absolute;top:11px;right:11px;color:var(--text-2);opacity:.38;pointer-events:none;
+    transition:opacity .3s ease}
+  .card:hover .expand{opacity:.92}
+  .expand svg{width:15px;height:15px}
+  .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;
+    background:var(--card);border:0.5px solid var(--border);color:var(--text-2);font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;transition:background .45s ease,border-color .45s ease,color .45s ease}
+  .ico{width:66px;height:66px;border-radius:50%;background:var(--icon-bg);color:var(--text-2);display:flex;
+    align-items:center;justify-content:center;transition:background .45s ease,color .45s ease,transform .45s ease}
+  .ico svg{width:34px;height:34px}
+  .ttl{font-size:clamp(16px,1.6vw,19px);font-weight:600;color:var(--text)}
+  .sub{font-size:clamp(12.5px,1.25vw,14px);color:var(--text-2);line-height:1.45}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:5px 10px;
+    border-radius:999px;background:var(--soft);border:0.5px solid var(--c);color:var(--text);margin-top:3px}
+  .chip svg{width:11px;height:11px;color:var(--c)}
+  .chip.tbc{border-style:dashed}
+
+  .card.on{border-color:var(--c);box-shadow:0 0 0 4px var(--soft),0 0 34px -2px var(--glow);transform:translateY(-5px)}
+  .card.on .ico{background:var(--c);color:#0B0C0B;transform:scale(1.07)}
+  .card.on .badge{background:var(--c);border-color:var(--c);color:#0B0C0B}
+
+  .conn{flex:0 0 auto;align-self:center}
+  .jdown{width:100%;padding:0}
+  .conn-curve{display:block;width:100%;height:92px}
+  .dot,.dot-c{opacity:0}
+  .dot-c{offset-path:path('M 854 5 C 854 50 146 50 146 82');offset-rotate:0deg}
+  .dot.teal{filter:drop-shadow(0 0 3px #2BC79A)}
+  .dot.amber,.dot-c{filter:drop-shadow(0 0 3px #E8B04B)}
+
+  @media (prefers-reduced-motion: no-preference){
+    .step{animation:rise .55s ease both}
+    .jrow:nth-child(3) .step{animation-delay:.15s}
+    .flow,.flow-c{animation:dash 1.2s linear infinite}
+    .dot{animation:travel 2.2s ease-in-out infinite}
+    .dot-c{animation:travelC 2.8s ease-in-out infinite}
+  }
+  @keyframes dash{to{stroke-dashoffset:-20}}
+  @keyframes travel{0%{transform:translateX(0);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(68px);opacity:0}}
+  @keyframes travelC{0%{offset-distance:0%;opacity:0}10%{opacity:1}90%{opacity:1}100%{offset-distance:100%;opacity:0}}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .foot{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .hint{margin:0;display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-3)}
+  .hint svg{width:14px;height:14px;color:#2BC79A}
+  .legend{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--text-2)}
+  .lg{display:inline-flex;align-items:center;gap:8px}
+  .lg i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .cap{text-align:center;font-size:13px;color:var(--text-3);line-height:1.55;max-width:640px;margin:0}
+
+  /* ---- modal ---- */
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.64);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+    display:flex;align-items:center;justify-content:center;padding:24px;z-index:60;opacity:0;visibility:hidden;
+    transition:opacity .25s ease,visibility .25s ease}
+  .backdrop.open{opacity:1;visibility:visible}
+  .modal{background:#141618;border:0.5px solid rgba(255,255,255,.12);border-top:3px solid var(--mc,#2BC79A);
+    border-radius:18px;width:100%;max-width:540px;max-height:86vh;overflow:auto;position:relative;
+    box-shadow:0 26px 64px -14px rgba(0,0,0,.72);transform:translateY(12px) scale(.98);transition:transform .25s ease}
+  .backdrop.open .modal{transform:none}
+  .m-head{display:flex;align-items:flex-start;gap:14px;padding:22px 22px 16px;border-bottom:0.5px solid rgba(255,255,255,.08)}
+  .m-badge{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--mc-soft,rgba(43,199,154,.14));
+    border:0.5px solid var(--mc,#2BC79A);color:var(--mc,#2BC79A);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .m-htext{flex:1;min-width:0}
+  .m-title{font-size:19px;font-weight:600;color:#F3F2ED}
+  .m-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+  .m-chip{display:inline-flex;align-items:center;font-size:11.5px;font-weight:500;padding:4px 9px;border-radius:999px;
+    background:var(--mc-soft,rgba(43,199,154,.14));border:0.5px solid var(--mc,#2BC79A);color:#F3F2ED}
+  .m-chip.dash{border-style:dashed}
+  .m-close{flex:0 0 auto;background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.12);color:#C9C8C1;
+    width:32px;height:32px;border-radius:9px;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;
+    justify-content:center;transition:background .2s ease}
+  .m-close:hover{background:rgba(255,255,255,.13)}
+  .m-body{padding:20px 22px 26px;display:flex;flex-direction:column;gap:20px}
+  .m-sec{display:flex;flex-direction:column;gap:25px}
+  .m-label{font-size:12px;font-weight:600;color:var(--mc,#2BC79A);letter-spacing:.02em}
+  .m-link{display:inline-flex;align-items:center;gap:7px;color:#F3F2ED;font-size:14px;text-decoration:none;
+    background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.12);padding:9px 13px;border-radius:10px;width:fit-content;
+    transition:background .2s ease}
+  .m-link:hover{background:rgba(255,255,255,.11)}
+  .m-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13.5px;color:#D7D6CF;
+    padding:10px 13px;background:rgba(255,255,255,.03);border:0.5px solid rgba(255,255,255,.07);border-radius:10px}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .pill.tbc{color:#E8B04B;border:1px dashed #E8B04B;background:rgba(232,176,75,.10)}
+  .pill.ok{color:#2BC79A;border:0.5px solid #2BC79A;background:rgba(43,199,154,.12)}
+  .pill.no{color:#9B9A92;border:0.5px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04)}
+  .m-note{font-size:13px;color:#9B9A92;line-height:1.55;margin:0}
+  .m-div{border-top:0.5px solid rgba(255,255,255,.09)}
+  .m-objbody{display:flex;flex-direction:column;gap:12px}
+  .m-goals{display:flex;flex-direction:column;gap:9px}
+  .m-goal{display:inline-flex;align-items:flex-start;gap:8px;font-size:13px;color:#C7C6BF;line-height:1.45}
+  .m-goal i{width:6px;height:6px;border-radius:50%;background:var(--mc,#2BC79A);flex:0 0 auto;margin-top:6px}
+  .m-qlist{display:flex;flex-direction:column;gap:13px}
+  .m-qitem{display:flex;gap:11px;align-items:flex-start;font-size:13px;color:#D2D1CA;line-height:1.5}
+  .m-qitem b{color:#F3F2ED;font-weight:600}
+  .m-qnum{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:rgba(232,176,75,.12);border:0.5px solid rgba(232,176,75,.42);color:#E8B04B;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .m-url{display:flex;flex-direction:column;gap:8px}
+  .m-url-label{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;font-size:12px;font-weight:600;color:var(--mc,#2BC79A);letter-spacing:.02em}
+  .m-open{font-size:11.5px;font-weight:500;color:#9B9A92;text-decoration:none;display:inline-flex;align-items:center;gap:4px;border:0.5px solid rgba(255,255,255,.14);border-radius:7px;padding:2px 8px;transition:color .2s ease,border-color .2s ease}
+  .m-open:hover{color:#F3F2ED;border-color:rgba(255,255,255,.28)}
+  .m-url-box{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.65;color:#CFE9DF;background:rgba(43,199,154,.06);border:0.5px solid rgba(43,199,154,.22);border-radius:10px;padding:11px 13px;word-break:break-all;overflow-wrap:anywhere;-webkit-user-select:all;user-select:all}
+  .m-q{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:#E8C98A;background:rgba(232,176,75,.07);border:0.5px solid rgba(232,176,75,.22);border-radius:9px;padding:9px 11px;line-height:1.5}
+  .m-q svg{flex:0 0 auto;width:14px;height:14px;color:#E8B04B;margin-top:1px}
+  .m-q code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:5px;color:#F0D9A4}
+  .m-warn{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:#F0D2A0;background:rgba(232,176,75,.12);border:0.5px solid rgba(232,176,75,.38);border-left:2.5px solid #E8B04B;border-radius:9px;padding:10px 12px;line-height:1.55}
+  .m-warn svg{flex:0 0 auto;width:15px;height:15px;color:#E8B04B;margin-top:1px}
+  .m-warn b{display:block;color:#F5DCA8;font-weight:600;margin-bottom:3px}
+
+  @media (max-width:820px){
+    .jrow{flex-direction:column;align-items:center}
+    .step{max-width:300px;width:100%}
+    .conn{transform:rotate(90deg);margin:2px 0}
+  }
+</style>
+</head>
+<body>
+
+  <header class="head">
+    <p class="eyebrow">Partner onboarding</p>
+    <h1>IB partner onboarding journey</h1>
+    <p>From sign-up landing page to KYC verification — and where the lead sits at each step</p>
+    <div class="status"><i></i>Exploration phase &mdash; locking down with OP &middot; BO &middot; SO</div>
+  </header>
+
+  <main class="journey" aria-label="IB partner onboarding journey. Each step is clickable for detail.">
+
+    <div class="jrow">
+
+    <div class="step mkt">
+      <div class="card" data-step="1" role="button" tabindex="0" aria-label="Landing page — open detail">
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">1</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><line x1="3.5" y1="9" x2="20.5" y2="9"/><line x1="7.5" y1="4.5" x2="7.5" y2="9"/></svg></div>
+        <div class="ttl">Landing page</div>
+        <div class="sub">IB sign-up page</div>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Marketing site</span>
+      </div>
+    </div>
+
+    <svg class="conn" width="84" height="64" viewBox="0 0 84 64" aria-hidden="true">
+      <line x1="4" y1="32" x2="72" y2="32" stroke="var(--track)" stroke-width="3" stroke-linecap="round"/>
+      <line class="flow" x1="4" y1="32" x2="72" y2="32" stroke="#2BC79A" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8"/>
+      <path d="M66 24 L76 32 L66 40" fill="none" stroke="#2BC79A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="dot teal"><circle cx="4" cy="32" r="9" fill="#2BC79A" opacity="0.22"/><circle cx="4" cy="32" r="4" fill="#2BC79A"/></g>
+    </svg>
+
+    <div class="step mkt">
+      <div class="card" data-step="2" role="button" tabindex="0" aria-label="Click register — open detail">
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">2</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3"/><path d="M12 3v3"/><path d="M6.4 6.4l2.1 2.1"/><path d="M17.6 6.4l-2.1 2.1"/><path d="M6.4 17.6l2.1 -2.1"/><path d="M12 12l9 3l-4 2l-2 4l-3 -9"/></svg></div>
+        <div class="ttl">Click register</div>
+        <div class="sub">Taps register button</div>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Marketing site</span>
+      </div>
+    </div>
+
+    <svg class="conn" width="84" height="64" viewBox="0 0 84 64" aria-hidden="true">
+      <defs><linearGradient id="ho" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2BC79A"/><stop offset="1" stop-color="#E8B04B"/></linearGradient></defs>
+      <line x1="4" y1="32" x2="72" y2="32" stroke="var(--track)" stroke-width="3" stroke-linecap="round"/>
+      <line class="flow" x1="4" y1="32" x2="72" y2="32" stroke="url(#ho)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8"/>
+      <path d="M66 24 L76 32 L66 40" fill="none" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="dot amber"><circle cx="4" cy="32" r="9" fill="#E8B04B" opacity="0.22"/><circle cx="4" cy="32" r="4" fill="#E8B04B"/></g>
+    </svg>
+
+    <div class="step sal">
+      <div class="card" data-step="3" role="button" tabindex="0" aria-label="Registration — open detail">
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">3</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2V7a2 2 0 0 0 -2 -2h-2"/><rect x="9" y="3" width="6" height="4" rx="1.5"/><path d="M9 14l2 2l4 -4"/></svg></div>
+        <div class="ttl">Registration</div>
+        <div class="sub">Form completed</div>
+        <span class="chip tbc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Salesforce / Zendesk?</span>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="jdown">
+      <svg class="conn-curve" viewBox="0 0 1000 92" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M 854 5 C 854 50 146 50 146 82" fill="none" stroke="var(--track)" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <path class="flow-c" d="M 854 5 C 854 50 146 50 146 82" fill="none" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8" vector-effect="non-scaling-stroke"/>
+        <path d="M 139 74 L 146 84 L 153 74" fill="none" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+        <g class="dot-c"><circle cx="0" cy="0" r="9" fill="#E8B04B" opacity="0.22"/><circle cx="0" cy="0" r="4" fill="#E8B04B"/></g>
+      </svg>
+    </div>
+
+    <div class="jrow">
+
+    <div class="step sal">
+      <div class="card" data-step="4" role="button" tabindex="0" aria-label="KYC verification — open detail">
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">4</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8" cy="10" r="2"/><line x1="13" y1="9" x2="18" y2="9"/><line x1="13" y1="12" x2="18" y2="12"/><line x1="6" y1="15.5" x2="18" y2="15.5"/></svg></div>
+        <div class="ttl">KYC verification</div>
+        <div class="sub">Identity verified</div>
+        <span class="chip tbc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Zendesk / Salesforce?</span>
+      </div>
+    </div>
+
+    <svg class="conn" width="84" height="64" viewBox="0 0 84 64" aria-hidden="true">
+      <line x1="4" y1="32" x2="72" y2="32" stroke="var(--track)" stroke-width="3" stroke-linecap="round"/>
+      <line class="flow" x1="4" y1="32" x2="72" y2="32" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8"/>
+      <path d="M66 24 L76 32 L66 40" fill="none" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="dot amber"><circle cx="4" cy="32" r="9" fill="#E8B04B" opacity="0.22"/><circle cx="4" cy="32" r="4" fill="#E8B04B"/></g>
+    </svg>
+
+    <div class="step sal">
+      <div class="card" data-step="5" role="button" tabindex="0" aria-label="Account active — open detail">
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">5</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18"/><path d="M16 14.5h2"/></svg></div>
+        <div class="ttl">Account active</div>
+        <div class="sub">Funded client?</div>
+        <span class="chip tbc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Salesforce?</span>
+      </div>
+    </div>
+
+    <svg class="conn" width="84" height="64" viewBox="0 0 84 64" aria-hidden="true">
+      <line x1="4" y1="32" x2="72" y2="32" stroke="var(--track)" stroke-width="3" stroke-linecap="round"/>
+      <line class="flow" x1="4" y1="32" x2="72" y2="32" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8"/>
+      <path d="M66 24 L76 32 L66 40" fill="none" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="dot amber"><circle cx="4" cy="32" r="9" fill="#E8B04B" opacity="0.22"/><circle cx="4" cy="32" r="4" fill="#E8B04B"/></g>
+    </svg>
+
+    <div class="step sal">
+      <div class="card" data-step="6" role="button" tabindex="0" aria-label="IB conversion — open detail">
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">6</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M9 14.5 8 21l4-2.5 4 2.5-1-6.5"/></svg></div>
+        <div class="ttl">IB conversion</div>
+        <div class="sub">Client &rarr; IB</div>
+        <span class="chip tbc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Salesforce?</span>
+      </div>
+    </div>
+
+    </div>
+
+  </main>
+
+  <div class="foot">
+    <p class="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12l9 3l-4 2l-2 4l-3 -9"/><path d="M3 12h3"/><path d="M12 3v3"/></svg>Click any step to open its detail</p>
+    <div class="legend">
+      <span class="lg"><i style="background:#2BC79A"></i>ACQ Owned</span>
+      <span class="lg"><i style="background:#E8B04B"></i>Sales / Ops-owned</span>
+      <span class="lg"><i style="background:transparent;border:1px dashed #E8B04B"></i>To lock down with ops</span>
+    </div>
+    <p class="cap">The arrow into step 3 fades teal&nbsp;→&nbsp;amber — that's the handoff, where the lead leaves marketing's hands and lands in the CRM.</p>
+  </div>
+
+  <!-- modal shell -->
+  <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="modal" id="modal">
+      <div class="m-head">
+        <span class="m-badge" id="m-badge"></span>
+        <div class="m-htext">
+          <div class="m-title" id="m-title"></div>
+          <div class="m-chips" id="m-chips"></div>
+        </div>
+        <button class="m-close" id="m-close" aria-label="Close detail">&times;</button>
+      </div>
+      <div class="m-body" id="m-body"></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var DETAIL = {
+    "1": {num:"1", title:"Landing page", owner:"mkt",
+      chips:[{t:"ACQ Owned"}],
+      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+           '<div class="m-url"><div class="m-url-label">Paid channel &mdash; example tracking link <span class="pill tbc">to confirm</span> <a class="m-open" href="https://www.tmgmpartners.com/en/partners-program/introducing-broker?campaign_code=bWVuYW10aWJsZ2dBUjI2&amp;expiry_date=MTgw" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
+           '<div class="m-url-box">https://www.tmgmpartners.com/en/partners-program/introducing-broker?campaign_code=bWVuYW10aWJsZ2dBUjI2&amp;expiry_date=MTgw</div></div>'+
+           '<div class="m-url"><div class="m-url-label">Sales channel &mdash; example tracking link <span class="pill tbc">to confirm</span> <a class="m-open" href="https://www.tmgmpartners.com/en/partners-program/introducing-broker?campaign_code=bWVuYW10aWJsZ2c2MjY=&amp;expiry_date=MTgw" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
+           '<div class="m-url-box">https://www.tmgmpartners.com/en/partners-program/introducing-broker?campaign_code=bWVuYW10aWJsZ2c2MjY=&amp;expiry_date=MTgw</div></div>'+
+           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>No sales rep code visible on the link (e.g. <code>5001_KittyYu</code>) &mdash; how is a lead tied to the specific salesperson?</span></div>'+
+           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Is GA4 set up on this page (register-click event + funnel), and is the <code>campaign_code</code> / <code>client_id</code> captured into the CRM at registration so we can join web &rarr; CRM?</span></div>'+
+           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Can we see this whole thing as a funnel &mdash; the conversion rate at each step (register &rarr; KYC &rarr; active &rarr; IB) &mdash; so we can find the worst-leaking stage and focus CRO there? Or are we only able to count totals?</span></div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
+           '<div class="m-url"><div class="m-url-label">Landing page &mdash; IB sign-up page <span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>confirmed</span> <a class="m-open" href="https://www.tmgmpartners.com/en/partners-program/introducing-broker" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
+           '<div class="m-url-box">https://www.tmgmpartners.com/en/partners-program/introducing-broker</div></div>'+
+           '<div class="m-row"><span>Organic search engine</span><span class="pill no">No tracking link</span></div>'+
+           '<div class="m-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8 2.6 20.4h18.8z"/><path d="M12 10v4.2"/><path d="M12 17.6h.01"/></svg><div><b>Known issue &mdash; campaign code priority</b>The system&rsquo;s default campaign code currently overrides the predefined code in these links, so the intended tracking code may not be captured. Ops + dev are fixing the priority logic.</div></div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">See and optimise the full IB journey end-to-end &mdash; from the first landing-page touch to a converted IB &mdash; knowing exactly which channel, campaign, and rep every lead came from.</p>'+
+           '<p class="m-note">Use GA4 to measure traffic volume and the on-site funnel (landing &rarr; register click &rarr; form submit) at the top, then carry that attribution downstream into the systems that hold the lead &mdash; Salesforce (CRM) and Zendesk (ticketing) &mdash; so one lead can be followed end-to-end.</p>'+
+           '<p class="m-note">And see the journey as a measurable funnel &mdash; the conversion rate at every step (register &rarr; KYC &rarr; active &rarr; IB), not just totals &mdash; so we can pinpoint the worst-leaking stage and put CRO where it actually moves the needle.</p>'+
+           '<p class="m-note">That&rsquo;s what lets us run CRO on the real drop-off points and prove marketing&rsquo;s impact &mdash; and it has to start with proper, consistent tracking right here at the landing page.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Lock attribution at the landing page &mdash; confirm every channel link carries correct, working tracking &mdash; so this first step is a clean, measurable base for everything downstream.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Proper tracking for each channel</span>'+
+           '<span class="m-goal"><i></i>Clean source-to-conversion attribution</span>'+
+           '<span class="m-goal"><i></i>A clear base for CRO</span>'+
+           '<span class="m-goal"><i></i>See the funnel as conversion rates to find the leak</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "2": {num:"2", title:"Click register", owner:"mkt",
+      chips:[{t:"Marketing site"},{t:"ACQ Owned"}],
+      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Is there a GTM click trigger on the register button that fires our ad pixels (Meta / Google / TikTok) and a GA4 event when it&rsquo;s clicked?</span></div>'+
+           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Is a &ldquo;clicked register but didn&rsquo;t complete&rdquo; audience being built from the pixel, so we can retarget those drop-offs via paid?</span></div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
+           '<div class="m-objbody">'+
+           '<div class="m-row"><span>Touchpoint owner</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Marketing / ACQ</span></div>'+
+           '<p class="m-note">Still ours to capture &mdash; the register button is on the landing page, so the click is marketing&rsquo;s to tag. The handoff to sales only happens at registration.</p>'+
+           '</div>'+
+           '<p class="m-note">Known constraint &mdash; under iOS ATT and consent rules, pixel retargeting audiences are consent-dependent and smaller. An industry baseline, not a TMGM gap, so expect some signal loss.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Capture every register-button click &mdash; so we can win back the drop-offs (clicked but didn&rsquo;t complete) through paid retargeting, and measure the click&rarr;registration conversion rate, a prime CRO lever on this funnel.</p>'+
+           '<p class="m-note">Paired with the landing-page attribution, that tells us not just how many clicked, but which channel and campaign drove the clicks that actually convert &mdash; so we spend where it works.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Get the register-button click firing cleanly into GTM (GA4 + ad pixels) &mdash; so the click is measured, the drop-off audience exists for retargeting, and the click&rarr;registration rate becomes a number we can optimise.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Fire the register-button click via GTM (GA4 + ad pixels)</span>'+
+           '<span class="m-goal"><i></i>Build the &ldquo;clicked but didn&rsquo;t complete&rdquo; audience &rarr; retarget via paid</span>'+
+           '<span class="m-goal"><i></i>Track the click&rarr;registration conversion rate (CRO)</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "3": {num:"3", title:"Registration", owner:"sal",
+      chips:[{t:"Salesforce / Zendesk?",dash:true},{t:"OP / BO / SO / Sales / AM Owned?",dash:true}],
+      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>Where does a completed registration actually land &mdash; <b>Salesforce</b>, <b>Zendesk</b>, or a marketing tool first that then syncs across?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>Do <b>both codes get written onto the lead record</b> at registration &mdash; the <b>campaign code</b> (the marketing source) and the <b>sales rep code</b> (the assigned salesperson) &mdash; so the full source survives the handoff, not just half of it?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">3</span><span>Does a <b>welcome / acknowledgement email</b> go to the person who just filled out the form?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">4</span><span>Does anyone <b>pick the lead up</b> once it lands &mdash; and who owns that first pickup: <b>OP</b>, <b>SO</b>, or <b>BO</b>?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">5</span><span>Is the lead routed straight to a regional team by the <b>country field</b> on the form &mdash; or does a <b>Head of AM</b> receive it first, then distribute it to the right region by that country field?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">6</span><span>Is a <b>first contact</b> made to the new registrant &mdash; by <b>call or WhatsApp</b> &mdash; and what&rsquo;s the follow-up cadence after?</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
+           '<div class="m-row"><span>Lead access after this point</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Sales + AM</span></div>'+
+           '<p class="m-note">This is the handoff &mdash; once a lead is in the conversion funnel, sales and account managers own and access it, and marketing no longer has access or direct visibility. It&rsquo;s the exact boundary this whole map is built around (and why the card turns amber here).</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Keep the source alive across the handoff &mdash; when the registration lands in the CRM, the campaign code should be written onto the lead record, so a marketing-sourced lead stays identifiable even once it&rsquo;s on the sales side.</p>'+
+           '<p class="m-note">And win back visibility past this line &mdash; who picks the lead up, how fast, and where leads stall &mdash; so CRO and reporting don&rsquo;t stop at the form. This is exactly where marketing currently goes blind, and why we can&rsquo;t yet answer &ldquo;how&rsquo;s the campaign doing&rdquo; all the way to a converted IB.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Pin down where a completed registration actually lands, who owns it from here, and whether the campaign code is written onto the lead record &mdash; so the source survives the handoff and we can follow the lead past the boundary.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Confirm where the lead lands + who picks it up</span>'+
+           '<span class="m-goal"><i></i>Check the campaign code persists onto the lead record</span>'+
+           '<span class="m-goal"><i></i>Map the post-registration cadence for CRO</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "4": {num:"4", title:"KYC verification", owner:"sal",
+      chips:[{t:"Zendesk / Salesforce?",dash:true},{t:"Sales / Ops / AM Owned?",dash:true}],
+      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>Does the KYC email&rsquo;s <b>client portal link carry tracking</b> (like the cards 1&ndash;4 links), or does attribution <b>stop here</b>? Can it be a <b>tracking / mobile deep link</b> so we can see whether the lead clicked login &mdash; and act on it (a <b>call or WhatsApp</b>, keep retargeting)?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>If a lead <b>stalls before completing KYC</b>, what&rsquo;s the full recovery cadence &mdash; how many <b>automated email reminders</b> go out and after how many days, and when does <b>sales/AM step in directly by call or WhatsApp</b>? So we know whether these warm drop-offs are being worked, not left to go cold.</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">3</span><span>Through this stage, which system actually <b>holds the lead</b> &mdash; <b>Zendesk</b>, <b>Salesforce</b>, or somewhere else &mdash; and where does it move once KYC is done? So we know where the record lives and whether marketing can still see it at all.</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">4</span><span>Before KYC is done, has an <b>AM</b> already picked up the lead &mdash; or does a real person only take over <b>after KYC</b>? So we know exactly when human ownership starts, and whether anyone is chasing the pre-KYC drop-offs.</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">5</span><span>Do <b>both codes</b> still hold through KYC &mdash; the <b>campaign code</b> (the marketing source) and the <b>sales rep code</b> (the assigned salesperson) &mdash; or does anything overwrite or drop either along the way? So the lead&rsquo;s <b>full source survives</b>, not just half of it.</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
+           '<div class="m-url"><div class="m-url-label">Client portal link &mdash; from the KYC email <span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>confirmed</span> <a class="m-open" href="https://portal.tmgm.com/login" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
+           '<div class="m-url-box">https://portal.tmgm.com/login</div></div>'+
+           '<div class="m-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8 2.6 20.4h18.8z"/><path d="M12 10v4.2"/><path d="M12 17.6h.01"/></svg><div><b>Known gap &mdash; non-KYC drop-offs may go un-chased</b>Not everyone who registers completes KYC &mdash; the ones who drop off before finishing are the &ldquo;non-KYC&rdquo; leads. In a live sign-up test, a non-KYC lead got the automated KYC email but no sales/AM recovery (no call) &mdash; so beyond that one automated touch, these warm drop-offs currently appear to go un-worked.</div></div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Keep attribution and visibility alive through the KYC stage &mdash; ideally the portal link is a tracking / deep link, so we can see whether each lead actually clicked through and logged in, not just that an email was sent.</p>'+
+           '<p class="m-note">Turn the non-KYC drop-off into a CRO win &mdash; catch the leads who registered but stalled before KYC and act on them (email, call/WhatsApp, retargeting) instead of letting them go dark. A warm lead who started but didn&rsquo;t finish usually converts far better than fresh cold traffic.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Still CRO &mdash; track and properly attribute at every micro-step, all the way to KYC done, so no drop-off goes dark and each stall point becomes an action, not a blind spot.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Track whether the lead clicks the portal login (tracking / deep link)</span>'+
+           '<span class="m-goal"><i></i>Act on drop-offs &mdash; email, call/WhatsApp, retargeting</span>'+
+           '<span class="m-goal"><i></i>Keep attribution intact at every micro-step through to KYC done</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "5": {num:"5", title:"Account active", owner:"sal",
+      chips:[{t:"Salesforce / Zendesk?",dash:true},{t:"Sales / Ops / AM Owned?",dash:true}],
+      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>What does <b>&ldquo;account active&rdquo; actually mean</b> at this step &mdash; <b>KYC approved</b> (verified only), the <b>first deposit / FTD</b> (funded), or the account <b>open and trading live</b>? The answer changes which conversion we&rsquo;re even optimising.</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>Once an account is active, <b>where does that status live</b> &mdash; Salesforce, Zendesk, or elsewhere &mdash; and can marketing see who actually activated, or are we blind to it?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">3</span><span>Do <b>both codes</b> still hold by this stage &mdash; the <b>campaign code</b> (the marketing source) and the <b>sales rep code</b> (the assigned salesperson) &mdash; or has anything overwritten or dropped either between KYC and active?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">4</span><span>Who <b>owns the account now</b> &mdash; the same AM as before, or does it move to a <b>different desk or team</b> at activation? So we know where ownership sits.</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">5</span><span>Between KYC done and active, is there a <b>drop-off</b> &mdash; verified leads who don&rsquo;t take the next step (e.g. don&rsquo;t fund) &mdash; and is anyone <b>chasing them by call or WhatsApp</b> or retargeting, or do they go cold?</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
+           '<p class="m-note">Nothing locked yet. ACQ has no visibility into this stage &mdash; until ops confirms what &ldquo;active&rdquo; means and where it&rsquo;s tracked, every line above stays an open question. This card is the least-mapped of the six, on purpose.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">First, just get a clear definition and visibility &mdash; know exactly what &ldquo;active&rdquo; means, when it happens, and be able to see which leads actually reached it instead of guessing. Right now this stage is a black box.</p>'+
+           '<p class="m-note">Then optimise the conversion into it &mdash; if &ldquo;active&rdquo; means funded / FTD, the KYC &rarr; first-deposit step is one of the most valuable conversions in the whole funnel, and chasing the verified-but-not-funded drop-offs (call / WhatsApp, retargeting) is a direct revenue lever.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Define the milestone and make it visible &mdash; pin down what &ldquo;active&rdquo; means, where the status lives, and whether the lead&rsquo;s source is still intact by the time it reaches here.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Lock what &ldquo;active&rdquo; actually means + where it&rsquo;s tracked</span>'+
+           '<span class="m-goal"><i></i>Keep both codes intact into this stage (attribution survives)</span>'+
+           '<span class="m-goal"><i></i>Chase the verified-but-not-active drop-offs (call / WhatsApp, retargeting)</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "6": {num:"6", title:"IB conversion", owner:"sal",
+      chips:[{t:"Salesforce"},{t:"AM / BO / SO Owned?",dash:true}],
+      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>For an existing client, an IB request goes <b>AM &rarr; BO</b> (as a Zendesk ticket) <b>&rarr; BO sets it up in Salesforce</b> (profile, commission account, rebate). Is the path <b>identical for a client who came through this funnel</b>, or different?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>When the <b>sales IB code overwrites the campaign code</b>, is the original source kept <b>anywhere</b> &mdash; a separate field, a log, an archive &mdash; or is it gone the moment it&rsquo;s overwritten?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">3</span><span>Can a <b>fix</b> be scoped so the source survives &mdash; write the <b>campaign code + sales rep code into their own field</b> that the IB code never touches, so they can coexist?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">4</span><span>For IBs <b>already on the platform</b>, can we <b>back-fill</b> their original source from historical lead data (the campaign code that was there before the overwrite)?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">5</span><span>What is the <b>sales IB code</b> exactly, and <b>why does it replace</b> the campaign code instead of sitting alongside it? Understanding that is the key to the fix.</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
+           '<div class="m-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8 2.6 20.4h18.8z"/><path d="M12 10v4.2"/><path d="M12 17.6h.01"/></svg><div><b>The attribution break</b>When a client becomes an IB, the system <b>overwrites the campaign code with the sales IB code</b> in Salesforce, and the original source attribution is lost. It&rsquo;s why the IB KPI is &ldquo;total new IB on the platform,&rdquo; not marketing-sourced IBs. This is long-standing, documented system behaviour &mdash; a technical gap to fix, not anyone&rsquo;s fault, and earlier attempts to solve it stalled.</div></div>'+
+           '<div class="m-row"><span>Where IB setup happens</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Salesforce</span></div>'+
+           '<p class="m-note">Salesforce is the CRM, and IBs are tracked there per campaign code &mdash; which is exactly what the overwrite corrupts.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Stop the source dying at conversion &mdash; get a fix so that when a client becomes an IB, the original <b>campaign code and sales rep code are preserved</b> (in their own field) instead of being overwritten. That single fix is what would finally let us prove which campaigns produced IBs.</p>'+
+           '<p class="m-note">Once the source survives, the IB KPI can move from <b>&ldquo;total new IB on the platform&rdquo;</b> to <b>&ldquo;marketing-sourced IBs&rdquo;</b> &mdash; the exact question leadership keeps asking, and the one we currently can&rsquo;t answer.</p>'+
+           '<p class="m-note">And it doesn&rsquo;t stop at counting &mdash; once the source survives, we can measure <b>cost per IB and ROAS by channel</b>, and see which campaigns produce IBs that <b>actually trade</b>, not just sign up. That&rsquo;s what turns this from reporting into <b>budget decisions</b>.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Document the break precisely, then turn it into a fix &mdash; preserve the original source through IB conversion so marketing-sourced IBs become measurable.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Confirm whether the original codes are kept anywhere before the overwrite</span>'+
+           '<span class="m-goal"><i></i>Scope a fix: both codes in their own field, untouched by the IB code</span>'+
+           '<span class="m-goal"><i></i>Then measure marketing-sourced IBs &mdash; plus cost per IB and ROAS by channel</span>'+
+           '</div>'+
+           '</div></div>'}
+  };
+
+  var backdrop = document.getElementById("backdrop");
+  var modal    = document.getElementById("modal");
+  var badgeEl  = document.getElementById("m-badge");
+  var titleEl  = document.getElementById("m-title");
+  var chipsEl  = document.getElementById("m-chips");
+  var bodyEl   = document.getElementById("m-body");
+  var closeBtn = document.getElementById("m-close");
+  var cards    = Array.prototype.slice.call(document.querySelectorAll(".card"));
+  var lastTrigger = null;
+  var paused = false;
+
+  function ownerColor(o){ return o === "sal"
+    ? {c:"#E8B04B", s:"rgba(232,176,75,.14)"}
+    : {c:"#2BC79A", s:"rgba(43,199,154,.14)"}; }
+
+  function openModal(step){
+    var d = DETAIL[step]; if(!d) return;
+    var col = ownerColor(d.owner);
+    modal.style.setProperty("--mc", col.c);
+    modal.style.setProperty("--mc-soft", col.s);
+    badgeEl.textContent = d.num;
+    titleEl.textContent = d.title;
+    chipsEl.innerHTML = d.chips.map(function(ch){
+      return '<span class="m-chip'+(ch.dash?" dash":"")+'">'+ch.t+'</span>';
+    }).join("");
+    bodyEl.innerHTML = d.body;
+    backdrop.classList.add("open");
+    document.body.style.overflow = "hidden";
+    paused = true;
+    if(!reduce){ cards.forEach(function(c){ c.classList.remove("on"); }); }
+    closeBtn.focus();
+  }
+  function closeModal(){
+    backdrop.classList.remove("open");
+    document.body.style.overflow = "";
+    paused = false;
+    if(lastTrigger){ lastTrigger.focus(); }
+  }
+
+  cards.forEach(function(card){
+    function trigger(){ lastTrigger = card; openModal(card.getAttribute("data-step")); }
+    card.addEventListener("click", trigger);
+    card.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); trigger(); }
+    });
+  });
+  closeBtn.addEventListener("click", closeModal);
+  backdrop.addEventListener("click", function(e){ if(e.target === backdrop){ closeModal(); } });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && backdrop.classList.contains("open")){ closeModal(); }
+  });
+
+  // auto-walk highlight
+  if(reduce){ cards.forEach(function(c){ c.classList.add("on"); }); }
+  else {
+    var i = 0;
+    setInterval(function(){
+      if(paused) return;
+      cards.forEach(function(c){ c.classList.remove("on"); });
+      cards[i].classList.add("on");
+      i = (i + 1) % cards.length;
+    }, 1400);
+  }
+})();
+</script>
+
+</body>
+</html>
