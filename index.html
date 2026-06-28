@@ -29,6 +29,11 @@
   .status i{width:7px;height:7px;border-radius:50%;background:#E8B04B;display:inline-block;flex:0 0 auto}
 
   .journey{display:flex;flex-direction:column;align-items:center;gap:0;width:100%;max-width:1000px}
+  .journey.hide{display:none}
+  .tabs{display:inline-flex;gap:5px;padding:5px;background:rgba(255,255,255,.035);border:0.5px solid rgba(255,255,255,.1);border-radius:13px}
+  .tab{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:#9B9A92;font-family:inherit;font-size:13.5px;font-weight:500;letter-spacing:.01em;padding:9px 20px;border-radius:9px;cursor:pointer;transition:color .15s ease,background .15s ease}
+  .tab:hover{color:#D8D7D0}
+  .tab.on{background:rgba(255,255,255,.075);color:#F3F2ED;box-shadow:0 1px 3px rgba(0,0,0,.25)}
   .jrow{display:flex;align-items:stretch;justify-content:center;width:100%}
   .mkt{--c:#2BC79A;--soft:rgba(43,199,154,.14);--glow:rgba(43,199,154,.38)}
   .sal{--c:#E8B04B;--soft:rgba(232,176,75,.14);--glow:rgba(232,176,75,.38)}
@@ -42,6 +47,12 @@
   .expand{position:absolute;top:11px;right:11px;color:var(--text-2);opacity:.38;pointer-events:none;
     transition:opacity .3s ease}
   .card:hover .expand{opacity:.92}
+  .cstat{position:absolute;top:12px;left:12px;display:flex;gap:5px;z-index:2;pointer-events:none}
+  .cstat i{width:7px;height:7px;border-radius:50%;display:block}
+  .cstat i.lock{background:#3FB950;box-shadow:0 0 6px 0 rgba(63,185,80,.55)}
+  .cstat i.prog{background:#F7913B;box-shadow:0 0 6px 0 rgba(247,145,59,.55)}
+  .cstat i.open{background:#8B8A82}
+  .cstat i.road{background:#58A6FF;box-shadow:0 0 6px 0 rgba(88,166,255,.5)}
   .expand svg{width:15px;height:15px}
   .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;
     background:var(--card);border:0.5px solid var(--border);color:var(--text-2);font-size:13px;font-weight:600;
@@ -86,6 +97,7 @@
   .legend{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--text-2)}
   .lg{display:inline-flex;align-items:center;gap:8px}
   .lg i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .lgcap{font-size:11px;font-weight:600;color:#6B6A62;letter-spacing:.04em;text-transform:uppercase;margin-right:-6px}
   .cap{text-align:center;font-size:13px;color:var(--text-3);line-height:1.55;max-width:640px;margin:0}
 
   /* ---- modal ---- */
@@ -113,6 +125,17 @@
   .m-body{padding:20px 22px 26px;display:flex;flex-direction:column;gap:20px}
   .m-sec{display:flex;flex-direction:column;gap:25px}
   .m-label{font-size:12px;font-weight:600;color:var(--mc,#2BC79A);letter-spacing:.02em}
+  .m-shead{display:flex;flex-direction:column;gap:9px}
+  .m-who{display:inline-flex;align-self:flex-start;align-items:center;gap:7px;font-size:11.5px;font-weight:500;color:var(--mc,#2BC79A);background:var(--mc-soft,rgba(43,199,154,.14));border-radius:999px;padding:5px 11px;line-height:1.3}
+  .m-who svg{width:13px;height:13px;flex:0 0 auto;opacity:.95}
+  .m-who b{font-weight:700}
+  .m-sth{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  .m-sth .sdot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:currentColor;box-shadow:0 0 9px 0 currentColor}
+  .m-sth.lock{color:#3FB950}
+  .m-sth.prog{color:#F7913B}
+  .m-sth.open{color:#9B9A92}
+  .m-sth.open .sdot{box-shadow:none}
+  .m-sth.road{color:#58A6FF}
   .m-link{display:inline-flex;align-items:center;gap:7px;color:#F3F2ED;font-size:14px;text-decoration:none;
     background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.12);padding:9px 13px;border-radius:10px;width:fit-content;
     transition:background .2s ease}
@@ -163,16 +186,22 @@
   <header class="head">
     <p class="eyebrow">Partner onboarding</p>
     <h1>IB partner onboarding journey</h1>
-    <p>From sign-up landing page to KYC verification — and where the lead sits at each step</p>
+    <p>How an IB lead is acquired, tracked, and converted &mdash; and where the lead sits at each step</p>
     <div class="status"><i></i>Exploration phase &mdash; locking down with OP &middot; BO &middot; SO</div>
   </header>
 
-  <main class="journey" aria-label="IB partner onboarding journey. Each step is clickable for detail.">
+  <nav class="tabs" role="tablist" aria-label="Journey channel">
+    <button class="tab on" data-view="website" role="tab" aria-selected="true">Website Journey</button>
+    <button class="tab" data-view="meta" role="tab" aria-selected="false">Meta Instant Forms</button>
+  </nav>
+
+  <main class="journey" id="view-website" aria-label="Website IB onboarding journey. Each step is clickable for detail.">
 
     <div class="jrow">
 
     <div class="step mkt">
       <div class="card" data-step="1" role="button" tabindex="0" aria-label="Landing page — open detail">
+        <div class="cstat"><i class="lock"></i><i class="prog"></i><i class="open"></i></div>
         <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
         <div class="badge">1</div>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><line x1="3.5" y1="9" x2="20.5" y2="9"/><line x1="7.5" y1="4.5" x2="7.5" y2="9"/></svg></div>
@@ -191,6 +220,7 @@
 
     <div class="step mkt">
       <div class="card" data-step="2" role="button" tabindex="0" aria-label="Click register — open detail">
+        <div class="cstat"><i class="lock"></i><i class="open"></i></div>
         <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
         <div class="badge">2</div>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h3"/><path d="M12 3v3"/><path d="M6.4 6.4l2.1 2.1"/><path d="M17.6 6.4l-2.1 2.1"/><path d="M6.4 17.6l2.1 -2.1"/><path d="M12 12l9 3l-4 2l-2 4l-3 -9"/></svg></div>
@@ -210,6 +240,7 @@
 
     <div class="step sal">
       <div class="card" data-step="3" role="button" tabindex="0" aria-label="Registration — open detail">
+        <div class="cstat"><i class="lock"></i><i class="open"></i></div>
         <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
         <div class="badge">3</div>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2V7a2 2 0 0 0 -2 -2h-2"/><rect x="9" y="3" width="6" height="4" rx="1.5"/><path d="M9 14l2 2l4 -4"/></svg></div>
@@ -234,6 +265,7 @@
 
     <div class="step sal">
       <div class="card" data-step="4" role="button" tabindex="0" aria-label="KYC verification — open detail">
+        <div class="cstat"><i class="lock"></i><i class="open"></i></div>
         <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
         <div class="badge">4</div>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8" cy="10" r="2"/><line x1="13" y1="9" x2="18" y2="9"/><line x1="13" y1="12" x2="18" y2="12"/><line x1="6" y1="15.5" x2="18" y2="15.5"/></svg></div>
@@ -252,6 +284,7 @@
 
     <div class="step sal">
       <div class="card" data-step="5" role="button" tabindex="0" aria-label="Account active — open detail">
+        <div class="cstat"><i class="open"></i></div>
         <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
         <div class="badge">5</div>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18"/><path d="M16 14.5h2"/></svg></div>
@@ -270,6 +303,7 @@
 
     <div class="step sal">
       <div class="card" data-step="6" role="button" tabindex="0" aria-label="IB conversion — open detail">
+        <div class="cstat"><i class="lock"></i><i class="open"></i><i class="road"></i></div>
         <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
         <div class="badge">6</div>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M9 14.5 8 21l4-2.5 4 2.5-1-6.5"/></svg></div>
@@ -283,14 +317,103 @@
 
   </main>
 
+  <main class="journey hide" id="view-meta" aria-label="Meta Instant Forms lead journey. Each step is clickable for detail.">
+
+    <div class="jrow">
+
+    <div class="step mkt">
+      <div class="card" data-step="m1" role="button" tabindex="0" aria-label="Meta ad — open detail">
+        <div class="cstat"><i class="lock"></i><i class="open"></i></div>
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">1</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4a1 1 0 0 0 1 1h3l5 4V5L8 9H5a1 1 0 0 0-1 1z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></svg></div>
+        <div class="ttl">Meta ad</div>
+        <div class="sub">FB / IG lead ad</div>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Meta Ads Manager</span>
+      </div>
+    </div>
+
+    <svg class="conn" width="84" height="64" viewBox="0 0 84 64" aria-hidden="true">
+      <line x1="4" y1="32" x2="72" y2="32" stroke="var(--track)" stroke-width="3" stroke-linecap="round"/>
+      <line class="flow" x1="4" y1="32" x2="72" y2="32" stroke="#2BC79A" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8"/>
+      <path d="M66 24 L76 32 L66 40" fill="none" stroke="#2BC79A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="dot teal"><circle cx="4" cy="32" r="9" fill="#2BC79A" opacity="0.22"/><circle cx="4" cy="32" r="4" fill="#2BC79A"/></g>
+    </svg>
+
+    <div class="step mkt">
+      <div class="card" data-step="m2" role="button" tabindex="0" aria-label="Instant Form — open detail">
+        <div class="cstat"><i class="lock"></i><i class="open"></i></div>
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">2</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6"/><path d="M9 12h6"/><path d="M9 16h3"/></svg></div>
+        <div class="ttl">Instant Form</div>
+        <div class="sub">Filled inside Meta</div>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Meta Instant Form</span>
+      </div>
+    </div>
+
+    <svg class="conn" width="84" height="64" viewBox="0 0 84 64" aria-hidden="true">
+      <defs><linearGradient id="hoM" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2BC79A"/><stop offset="1" stop-color="#E8B04B"/></linearGradient></defs>
+      <line x1="4" y1="32" x2="72" y2="32" stroke="var(--track)" stroke-width="3" stroke-linecap="round"/>
+      <line class="flow" x1="4" y1="32" x2="72" y2="32" stroke="url(#hoM)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8"/>
+      <path d="M66 24 L76 32 L66 40" fill="none" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="dot amber"><circle cx="4" cy="32" r="9" fill="#E8B04B" opacity="0.22"/><circle cx="4" cy="32" r="4" fill="#E8B04B"/></g>
+    </svg>
+
+    <div class="step sal">
+      <div class="card" data-step="m3" role="button" tabindex="0" aria-label="Into the system — open detail">
+        <div class="cstat"><i class="lock"></i><i class="prog"></i><i class="open"></i><i class="road"></i></div>
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">3</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v10"/><path d="M8 9l4 4 4-4"/><path d="M5 16v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg></div>
+        <div class="ttl">Into the system</div>
+        <div class="sub">Manual now / sync?</div>
+        <span class="chip tbc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Into CRM &mdash; how?</span>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="jdown">
+      <svg class="conn-curve" viewBox="0 0 1000 92" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M 854 5 C 854 50 500 50 500 82" fill="none" stroke="var(--track)" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <path class="flow-c" d="M 854 5 C 854 50 500 50 500 82" fill="none" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8" vector-effect="non-scaling-stroke"/>
+        <path d="M 493 74 L 500 84 L 507 74" fill="none" stroke="#E8B04B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+        <g class="dot-c" style="offset-path:path('M 854 5 C 854 50 500 50 500 82')"><circle cx="0" cy="0" r="9" fill="#E8B04B" opacity="0.22"/><circle cx="0" cy="0" r="4" fill="#E8B04B"/></g>
+      </svg>
+    </div>
+
+    <div class="jrow">
+
+    <div class="step sal">
+      <div class="card" data-step="m4" role="button" tabindex="0" aria-label="Joins main journey — open detail">
+        <div class="cstat"><i class="lock"></i><i class="open"></i><i class="road"></i></div>
+        <span class="expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M16 20h3a1 1 0 0 0 1-1v-3"/></svg></span>
+        <div class="badge">4</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v5a4 4 0 0 0 4 4h9"/><path d="M16 9l4 4-4 4"/></svg></div>
+        <div class="ttl">Joins main journey</div>
+        <div class="sub">&rarr; KYC &rarr; active &rarr; IB</div>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Same as Website tab</span>
+      </div>
+    </div>
+
+    </div>
+
+  </main>
+
   <div class="foot">
     <p class="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12l9 3l-4 2l-2 4l-3 -9"/><path d="M3 12h3"/><path d="M12 3v3"/></svg>Click any step to open its detail</p>
-    <div class="legend">
-      <span class="lg"><i style="background:#2BC79A"></i>ACQ Owned</span>
-      <span class="lg"><i style="background:#E8B04B"></i>Sales / Ops-owned</span>
-      <span class="lg"><i style="background:transparent;border:1px dashed #E8B04B"></i>To lock down with ops</span>
+    <div class="legend"><span class="lgcap">Owner</span>
+      <span class="lg"><i style="background:#2BC79A"></i>ACQ</span>
+      <span class="lg"><i style="background:#E8B04B"></i>Sales / Ops</span>
+      <span class="lg"><i style="background:transparent;border:1px dashed #E8B04B"></i>To confirm</span>
     </div>
-    <p class="cap">The arrow into step 3 fades teal&nbsp;→&nbsp;amber — that's the handoff, where the lead leaves marketing's hands and lands in the CRM.</p>
+    <div class="legend"><span class="lgcap">Status</span>
+      <span class="lg"><i style="background:#3FB950"></i>Locked</span>
+      <span class="lg"><i style="background:#F7913B"></i>In progress</span>
+      <span class="lg"><i style="background:#8B8A82"></i>Open</span>
+      <span class="lg"><i style="background:#58A6FF"></i>2.0</span>
+    </div>
   </div>
 
   <!-- modal shell -->
@@ -315,7 +438,15 @@
   var DETAIL = {
     "1": {num:"1", title:"Landing page", owner:"mkt",
       chips:[{t:"ACQ Owned"}],
-      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
+           '<div class="m-url"><div class="m-url-label">Landing page &mdash; IB sign-up page <span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>confirmed</span> <a class="m-open" href="https://www.tmgmpartners.com/en/partners-program/introducing-broker" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
+           '<div class="m-url-box">https://www.tmgmpartners.com/en/partners-program/introducing-broker</div></div>'+
+           '<div class="m-row"><span>Organic search engine</span><span class="pill no">No tracking link</span></div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth prog"><span class="sdot"></span>In progress</div>'+
+           '<p class="m-note"><b>Campaign-code priority bug</b> &mdash; the system&rsquo;s default campaign code currently overrides the predefined code in the tracking links, so the intended tracking code may not be captured. Ops + dev are fixing the priority logic.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div>'+
            '<div class="m-url"><div class="m-url-label">Paid channel &mdash; example tracking link <span class="pill tbc">to confirm</span> <a class="m-open" href="https://www.tmgmpartners.com/en/partners-program/introducing-broker?campaign_code=bWVuYW10aWJsZ2dBUjI2&amp;expiry_date=MTgw" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
            '<div class="m-url-box">https://www.tmgmpartners.com/en/partners-program/introducing-broker?campaign_code=bWVuYW10aWJsZ2dBUjI2&amp;expiry_date=MTgw</div></div>'+
            '<div class="m-url"><div class="m-url-label">Sales channel &mdash; example tracking link <span class="pill tbc">to confirm</span> <a class="m-open" href="https://www.tmgmpartners.com/en/partners-program/introducing-broker?campaign_code=bWVuYW10aWJsZ2c2MjY=&amp;expiry_date=MTgw" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
@@ -323,12 +454,6 @@
            '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>No sales rep code visible on the link (e.g. <code>5001_KittyYu</code>) &mdash; how is a lead tied to the specific salesperson?</span></div>'+
            '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Is GA4 set up on this page (register-click event + funnel), and is the <code>campaign_code</code> / <code>client_id</code> captured into the CRM at registration so we can join web &rarr; CRM?</span></div>'+
            '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Can we see this whole thing as a funnel &mdash; the conversion rate at each step (register &rarr; KYC &rarr; active &rarr; IB) &mdash; so we can find the worst-leaking stage and focus CRO there? Or are we only able to count totals?</span></div></div>'+
-           '<div class="m-div"></div>'+
-           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
-           '<div class="m-url"><div class="m-url-label">Landing page &mdash; IB sign-up page <span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>confirmed</span> <a class="m-open" href="https://www.tmgmpartners.com/en/partners-program/introducing-broker" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
-           '<div class="m-url-box">https://www.tmgmpartners.com/en/partners-program/introducing-broker</div></div>'+
-           '<div class="m-row"><span>Organic search engine</span><span class="pill no">No tracking link</span></div>'+
-           '<div class="m-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8 2.6 20.4h18.8z"/><path d="M12 10v4.2"/><path d="M12 17.6h.01"/></svg><div><b>Known issue &mdash; campaign code priority</b>The system&rsquo;s default campaign code currently overrides the predefined code in these links, so the intended tracking code may not be captured. Ops + dev are fixing the priority logic.</div></div></div>'+
            '<div class="m-div"></div>'+
            '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
            '<div class="m-objbody">'+
@@ -351,16 +476,16 @@
 
     "2": {num:"2", title:"Click register", owner:"mkt",
       chips:[{t:"Marketing site"},{t:"ACQ Owned"}],
-      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
-           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Is there a GTM click trigger on the register button that fires our ad pixels (Meta / Google / TikTok) and a GA4 event when it&rsquo;s clicked?</span></div>'+
-           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Is a &ldquo;clicked register but didn&rsquo;t complete&rdquo; audience being built from the pixel, so we can retarget those drop-offs via paid?</span></div></div>'+
-           '<div class="m-div"></div>'+
-           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
            '<div class="m-objbody">'+
            '<div class="m-row"><span>Touchpoint owner</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Marketing / ACQ</span></div>'+
            '<p class="m-note">Still ours to capture &mdash; the register button is on the landing page, so the click is marketing&rsquo;s to tag. The handoff to sales only happens at registration.</p>'+
            '</div>'+
            '<p class="m-note">Known constraint &mdash; under iOS ATT and consent rules, pixel retargeting audiences are consent-dependent and smaller. An industry baseline, not a TMGM gap, so expect some signal loss.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div>'+
+           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Is there a GTM click trigger on the register button that fires our ad pixels (Meta / Google / TikTok) and a GA4 event when it&rsquo;s clicked?</span></div>'+
+           '<div class="m-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.3a2.3 2.3 0 1 1 3 2.2c-.6.3-1 .9-1 1.6v.4"/><path d="M12 16.5h.01"/></svg><span>Can a &ldquo;clicked register but didn&rsquo;t complete&rdquo; audience be built from the pixel, so we can retarget those drop-offs via paid?</span></div></div>'+
            '<div class="m-div"></div>'+
            '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
            '<div class="m-objbody">'+
@@ -380,7 +505,11 @@
 
     "3": {num:"3", title:"Registration", owner:"sal",
       chips:[{t:"Salesforce / Zendesk?",dash:true},{t:"OP / BO / SO / Sales / AM Owned?",dash:true}],
-      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
+           '<div class="m-row"><span>Lead access after this point</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Sales + AM</span></div>'+
+           '<p class="m-note">This is the handoff &mdash; once a lead is in the conversion funnel, sales and account managers own and access it, and marketing no longer has access or direct visibility. It&rsquo;s the exact boundary this whole map is built around (and why the card turns amber here).</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div>'+
            '<div class="m-qlist">'+
            '<div class="m-qitem"><span class="m-qnum">1</span><span>Where does a completed registration actually land &mdash; <b>Salesforce</b>, <b>Zendesk</b>, or a marketing tool first that then syncs across?</span></div>'+
            '<div class="m-qitem"><span class="m-qnum">2</span><span>Do <b>both codes get written onto the lead record</b> at registration &mdash; the <b>campaign code</b> (the marketing source) and the <b>sales rep code</b> (the assigned salesperson) &mdash; so the full source survives the handoff, not just half of it?</span></div>'+
@@ -389,10 +518,6 @@
            '<div class="m-qitem"><span class="m-qnum">5</span><span>Is the lead routed straight to a regional team by the <b>country field</b> on the form &mdash; or does a <b>Head of AM</b> receive it first, then distribute it to the right region by that country field?</span></div>'+
            '<div class="m-qitem"><span class="m-qnum">6</span><span>Is a <b>first contact</b> made to the new registrant &mdash; by <b>call or WhatsApp</b> &mdash; and what&rsquo;s the follow-up cadence after?</span></div>'+
            '</div></div>'+
-           '<div class="m-div"></div>'+
-           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
-           '<div class="m-row"><span>Lead access after this point</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Sales + AM</span></div>'+
-           '<p class="m-note">This is the handoff &mdash; once a lead is in the conversion funnel, sales and account managers own and access it, and marketing no longer has access or direct visibility. It&rsquo;s the exact boundary this whole map is built around (and why the card turns amber here).</p></div>'+
            '<div class="m-div"></div>'+
            '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
            '<div class="m-objbody">'+
@@ -412,19 +537,19 @@
 
     "4": {num:"4", title:"KYC verification", owner:"sal",
       chips:[{t:"Zendesk / Salesforce?",dash:true},{t:"Sales / Ops / AM Owned?",dash:true}],
-      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
+           '<div class="m-url"><div class="m-url-label">Client portal link &mdash; from the KYC email <span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>confirmed</span> <a class="m-open" href="https://portal.tmgm.com/login" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
+           '<div class="m-url-box">https://portal.tmgm.com/login</div></div>'+
+           '<p class="m-note"><b>Non-KYC drop-offs may go un-chased</b> &mdash; not everyone who registers completes KYC; the ones who drop off before finishing are the &ldquo;non-KYC&rdquo; leads. In a live sign-up test, a non-KYC lead got the automated KYC email but no sales/AM recovery (no call) &mdash; so beyond that one automated touch, these warm drop-offs currently appear to go un-worked.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div>'+
            '<div class="m-qlist">'+
-           '<div class="m-qitem"><span class="m-qnum">1</span><span>Does the KYC email&rsquo;s <b>client portal link carry tracking</b> (like the cards 1&ndash;4 links), or does attribution <b>stop here</b>? Can it be a <b>tracking / mobile deep link</b> so we can see whether the lead clicked login &mdash; and act on it (a <b>call or WhatsApp</b>, keep retargeting)?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>Does the KYC email&rsquo;s <b>client portal link carry tracking</b> (like the landing-page tracking links), or does attribution <b>stop here</b>? Can it be a <b>tracking / mobile deep link</b> so we can see whether the lead clicked login &mdash; and act on it (a <b>call or WhatsApp</b>, keep retargeting)?</span></div>'+
            '<div class="m-qitem"><span class="m-qnum">2</span><span>If a lead <b>stalls before completing KYC</b>, what&rsquo;s the full recovery cadence &mdash; how many <b>automated email reminders</b> go out and after how many days, and when does <b>sales/AM step in directly by call or WhatsApp</b>? So we know whether these warm drop-offs are being worked, not left to go cold.</span></div>'+
            '<div class="m-qitem"><span class="m-qnum">3</span><span>Through this stage, which system actually <b>holds the lead</b> &mdash; <b>Zendesk</b>, <b>Salesforce</b>, or somewhere else &mdash; and where does it move once KYC is done? So we know where the record lives and whether marketing can still see it at all.</span></div>'+
            '<div class="m-qitem"><span class="m-qnum">4</span><span>Before KYC is done, has an <b>AM</b> already picked up the lead &mdash; or does a real person only take over <b>after KYC</b>? So we know exactly when human ownership starts, and whether anyone is chasing the pre-KYC drop-offs.</span></div>'+
            '<div class="m-qitem"><span class="m-qnum">5</span><span>Do <b>both codes</b> still hold through KYC &mdash; the <b>campaign code</b> (the marketing source) and the <b>sales rep code</b> (the assigned salesperson) &mdash; or does anything overwrite or drop either along the way? So the lead&rsquo;s <b>full source survives</b>, not just half of it.</span></div>'+
            '</div></div>'+
-           '<div class="m-div"></div>'+
-           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
-           '<div class="m-url"><div class="m-url-label">Client portal link &mdash; from the KYC email <span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>confirmed</span> <a class="m-open" href="https://portal.tmgm.com/login" target="_blank" rel="noopener">Open <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>'+
-           '<div class="m-url-box">https://portal.tmgm.com/login</div></div>'+
-           '<div class="m-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8 2.6 20.4h18.8z"/><path d="M12 10v4.2"/><path d="M12 17.6h.01"/></svg><div><b>Known gap &mdash; non-KYC drop-offs may go un-chased</b>Not everyone who registers completes KYC &mdash; the ones who drop off before finishing are the &ldquo;non-KYC&rdquo; leads. In a live sign-up test, a non-KYC lead got the automated KYC email but no sales/AM recovery (no call) &mdash; so beyond that one automated touch, these warm drop-offs currently appear to go un-worked.</div></div></div>'+
            '<div class="m-div"></div>'+
            '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
            '<div class="m-objbody">'+
@@ -444,7 +569,9 @@
 
     "5": {num:"5", title:"Account active", owner:"sal",
       chips:[{t:"Salesforce / Zendesk?",dash:true},{t:"Sales / Ops / AM Owned?",dash:true}],
-      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
+      body:'<p class="m-note"><b>Nothing locked yet.</b> ACQ has no visibility into this stage &mdash; until ops confirms what &ldquo;active&rdquo; means and where it&rsquo;s tracked, every line below stays an open question. This card is the least-mapped of the six, on purpose.</p>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div>'+
            '<div class="m-qlist">'+
            '<div class="m-qitem"><span class="m-qnum">1</span><span>What does <b>&ldquo;account active&rdquo; actually mean</b> at this step &mdash; <b>KYC approved</b> (verified only), the <b>first deposit / FTD</b> (funded), or the account <b>open and trading live</b>? The answer changes which conversion we&rsquo;re even optimising.</span></div>'+
            '<div class="m-qitem"><span class="m-qnum">2</span><span>Once an account is active, <b>where does that status live</b> &mdash; Salesforce, Zendesk, or elsewhere &mdash; and can marketing see who actually activated, or are we blind to it?</span></div>'+
@@ -452,9 +579,6 @@
            '<div class="m-qitem"><span class="m-qnum">4</span><span>Who <b>owns the account now</b> &mdash; the same AM as before, or does it move to a <b>different desk or team</b> at activation? So we know where ownership sits.</span></div>'+
            '<div class="m-qitem"><span class="m-qnum">5</span><span>Between KYC done and active, is there a <b>drop-off</b> &mdash; verified leads who don&rsquo;t take the next step (e.g. don&rsquo;t fund) &mdash; and is anyone <b>chasing them by call or WhatsApp</b> or retargeting, or do they go cold?</span></div>'+
            '</div></div>'+
-           '<div class="m-div"></div>'+
-           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
-           '<p class="m-note">Nothing locked yet. ACQ has no visibility into this stage &mdash; until ops confirms what &ldquo;active&rdquo; means and where it&rsquo;s tracked, every line above stays an open question. This card is the least-mapped of the six, on purpose.</p></div>'+
            '<div class="m-div"></div>'+
            '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
            '<div class="m-objbody">'+
@@ -474,23 +598,13 @@
 
     "6": {num:"6", title:"IB conversion", owner:"sal",
       chips:[{t:"Salesforce"},{t:"AM / BO / SO Owned?",dash:true}],
-      body:'<div class="m-sec"><div class="m-label">To confirm</div>'+
-           '<div class="m-qlist">'+
-           '<div class="m-qitem"><span class="m-qnum">1</span><span>For an existing client, an IB request goes <b>AM &rarr; BO</b> (as a Zendesk ticket) <b>&rarr; BO sets it up in Salesforce</b> (profile, commission account, rebate). Is the path <b>identical for a client who came through this funnel</b>, or different?</span></div>'+
-           '<div class="m-qitem"><span class="m-qnum">2</span><span>When the <b>sales IB code overwrites the campaign code</b>, is the original source kept <b>anywhere</b> &mdash; a separate field, a log, an archive &mdash; or is it gone the moment it&rsquo;s overwritten?</span></div>'+
-           '<div class="m-qitem"><span class="m-qnum">3</span><span>Can a <b>fix</b> be scoped so the source survives &mdash; write the <b>campaign code + sales rep code into their own field</b> that the IB code never touches, so they can coexist?</span></div>'+
-           '<div class="m-qitem"><span class="m-qnum">4</span><span>For IBs <b>already on the platform</b>, can we <b>back-fill</b> their original source from historical lead data (the campaign code that was there before the overwrite)?</span></div>'+
-           '<div class="m-qitem"><span class="m-qnum">5</span><span>What is the <b>sales IB code</b> exactly, and <b>why does it replace</b> the campaign code instead of sitting alongside it? Understanding that is the key to the fix.</span></div>'+
-           '</div></div>'+
-           '<div class="m-div"></div>'+
-           '<div class="m-sec"><div class="m-label">Confirmed</div>'+
-           '<div class="m-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8 2.6 20.4h18.8z"/><path d="M12 10v4.2"/><path d="M12 17.6h.01"/></svg><div><b>The attribution break</b>When a client becomes an IB, the system <b>overwrites the campaign code with the sales IB code</b> in Salesforce, and the original source attribution is lost. It&rsquo;s why the IB KPI is &ldquo;total new IB on the platform,&rdquo; not marketing-sourced IBs. This is long-standing, documented system behaviour &mdash; a technical gap to fix, not anyone&rsquo;s fault, and earlier attempts to solve it stalled.</div></div>'+
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
+           '<p class="m-note"><b>The attribution break</b> &mdash; when a client becomes an IB, the system <b>overwrites the campaign code with the sales IB code</b> in Salesforce, and the original source attribution is lost. It&rsquo;s why the IB KPI is &ldquo;total new IB on the platform,&rdquo; not marketing-sourced IBs. This is long-standing, documented system behaviour &mdash; a technical gap to fix, not anyone&rsquo;s fault, and earlier attempts to solve it stalled.</p>'+
            '<div class="m-row"><span>Where IB setup happens</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Salesforce</span></div>'+
-           '<p class="m-note">Salesforce is the CRM, and IBs are tracked there per campaign code &mdash; which is exactly what the overwrite corrupts.</p></div>'+
-           '<div class="m-div"></div>'+
-           '<div class="m-sec"><div class="m-label">Back-office setup &mdash; the ops zone</div>'+
+           '<p class="m-note">Salesforce is the CRM, and IBs are tracked there per campaign code &mdash; which is exactly what the overwrite corrupts.</p>'+
+           '<p class="m-note"><b>Back-office setup &mdash; the ops zone.</b> How the IB build actually happens once an AM raises the request (confirmed by BO):</p>'+
            '<div class="ops">'+
-           '<div class="ops-blk">Confirmed by the BO team. This was described for an <b>existing client</b> &mdash; but every IB first completes <b>standard registration, then a manual sales upgrade</b>, so it applies to funnel-sourced leads too. Q1 above just nails down that the full mechanics match.</div>'+
+           '<div class="ops-blk">Confirmed by the BO team. This was described for an <b>existing client</b> &mdash; but every IB first completes <b>standard registration, then a manual sales upgrade</b>, so it applies to funnel-sourced leads too. Q1 below just nails down that the full mechanics match.</div>'+
            '<div class="ops-blk"><b>The request</b> &mdash; an AM raises the IB request on the client&rsquo;s behalf (the manual trigger); it reaches BO as a <b>Zendesk ticket</b> (ticketing only). BO does the build in <b>Salesforce</b> &mdash; and nothing in the client portal.</div>'+
            '<div class="ops-blk"><b>The setup &mdash; 3 steps in Salesforce:</b></div>'+
            '<div class="ops-steps">'+
@@ -502,6 +616,18 @@
            '<div class="ops-blk"><b>Activation</b> &mdash; the account is auto-created at registration; it goes live once BO completes the setup. BO does the setup <b>upfront on the request</b> (doesn&rsquo;t wait for the client). The client then accepts the IB agreement to unlock their <b>IB portal</b> (referral link, rebate rates) &mdash; activation is effectively immediate on acceptance.</div>'+
            '<div class="ops-blk"><b>Turnaround</b> &mdash; request &rarr; IB agreement uploaded is usually within <b>~1 hour</b>, depending on ticket volume.</div>'+
            '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>For an existing client, an IB request goes <b>AM &rarr; BO</b> (as a Zendesk ticket) <b>&rarr; BO sets it up in Salesforce</b> (profile, commission account, rebate). Is the path <b>identical for a client who came through this funnel</b>, or different?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>When the <b>sales IB code overwrites the campaign code</b>, is the original source kept <b>anywhere</b> &mdash; a separate field, a log, an archive &mdash; or is it gone the moment it&rsquo;s overwritten?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">3</span><span>Can a <b>fix</b> be scoped so the source survives &mdash; write the <b>campaign code + sales rep code into their own field</b> that the IB code never touches, so they can coexist?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">4</span><span>For IBs <b>already on the platform</b>, can we <b>back-fill</b> their original source from historical lead data (the campaign code that was there before the overwrite)?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">5</span><span>What is the <b>sales IB code</b> exactly, and <b>why does it replace</b> the campaign code instead of sitting alongside it? Understanding that is the key to the fix.</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth road"><span class="sdot"></span>2.0 &mdash; the target</div>'+
+           '<p class="m-note">The fix everyone&rsquo;s aiming for &mdash; write the <b>campaign code + sales rep code into their own field</b> that the IB code never touches, so the source survives conversion. That single change turns the IB KPI from <b>&ldquo;total new IB on the platform&rdquo;</b> into <b>&ldquo;marketing-sourced IB&rdquo;</b> &mdash; the exact number leadership keeps asking for &mdash; and opens up <b>cost per IB and ROAS by channel</b>. The <b>dedicated IB registration link</b> idea sits here too (raised in the chat; no precedent yet).</p></div>'+
            '<div class="m-div"></div>'+
            '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
            '<div class="m-objbody">'+
@@ -517,6 +643,133 @@
            '<span class="m-goal"><i></i>Confirm whether the original codes are kept anywhere before the overwrite</span>'+
            '<span class="m-goal"><i></i>Scope a fix: both codes in their own field, untouched by the IB code</span>'+
            '<span class="m-goal"><i></i>Then measure marketing-sourced IBs &mdash; plus cost per IB and ROAS by channel</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "m1": {num:"1", title:"Meta ad", owner:"mkt",
+      chips:[{t:"Meta Ads Manager"},{t:"ACQ Owned"}],
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
+           '<div class="m-row"><span>Channel</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Live MENA pilot</span></div>'+
+           '<p class="m-note">A paid Meta (FB / IG) lead-ads campaign running for MENA IB lead-gen &mdash; the lead is captured inside Meta, a different front door from the website.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-shead"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div><div class="m-who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>Confirm with <b>Daidi</b></div></div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>Today the source is added <b>after</b> the form &mdash; via the manual website re-registration (the <b>Into the system</b> step), which is also where the priority bug bites. On the Meta side, can the campaign code instead be set at the <b>ad / campaign level</b> so it rides with the lead from the first touch &mdash; letting us drop the manual step entirely?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>Can we track the <b>ad &rarr; form-open &rarr; submit</b> funnel in Meta, and see <b>cost per lead by ad / campaign</b>? That&rsquo;s the efficiency view for this channel.</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Capture the source at the very first touch &mdash; the campaign code on the ad &mdash; so attribution starts clean before the lead does anything else.</p>'+
+           '<p class="m-note">And measure cost per lead by ad / campaign, so this channel is optimised on real spend efficiency, not guesswork.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Lock attribution and measurement right at the Meta entry point, so everything downstream inherits a clean source.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Capture source natively at the Meta ad &mdash; drop the manual step</span>'+
+           '<span class="m-goal"><i></i>Track ad &rarr; submit funnel + cost per lead</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "m2": {num:"2", title:"Instant Form", owner:"mkt",
+      chips:[{t:"Meta Instant Form"},{t:"ACQ Owned"}],
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
+           '<div class="m-row"><span>Where the lead is captured</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Inside Meta</span></div>'+
+           '<p class="m-note">The lead fills the native Instant Form inside FB / IG and submits &mdash; captured in Meta, never touching the TMGM website. That&rsquo;s exactly why this is a different front door from the website journey.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-shead"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div><div class="m-who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>Confirm with <b>Daidi</b></div></div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>What <b>fields does the form capture</b> &mdash; enough for KYC and the CRM downstream, or will sales have to chase missing info later?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>Is the <b>form submit tracked as a conversion</b>, so we can measure submit rate and <b>retarget</b> the ones who opened but didn&rsquo;t submit?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">3</span><span>Is the <b>campaign code + rep passed as a hidden field in the Instant Form</b> (the standard way to carry source from a Meta form), or are we relying on <b>Meta&rsquo;s campaign / ad IDs from the Lead API</b>?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">4</span><span>Is the form set to <b>&ldquo;higher intent&rdquo;</b> (with a review step) or <b>&ldquo;more volume&rdquo;</b>, and are there <b>qualifying questions</b> on it &mdash; the levers that trade lead volume for lead quality?</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Capture every form submit with its source intact &mdash; campaign code and rep on the lead from the moment it&rsquo;s created.</p>'+
+           '<p class="m-note">And confirm the form collects everything needed downstream, so there&rsquo;s no gap when the lead reaches sales and KYC.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Clean lead capture in Meta with attribution attached &mdash; nothing lost between the form and the system.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Confirm fields cover KYC / CRM needs</span>'+
+           '<span class="m-goal"><i></i>Track submit as a conversion (+ retarget non-submitters)</span>'+
+           '<span class="m-goal"><i></i>Source attached to the lead inside Meta</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "m3": {num:"3", title:"Into the system", owner:"sal",
+      chips:[{t:"CRM &mdash; manual / sync?",dash:true},{t:"Sales Director + Ops?",dash:true}],
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
+           '<div class="m-row"><span>How it works today</span><span class="pill ok"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4l10 -10"/></svg>Manual</span></div>'+
+           '<p class="m-note">Each Instant Form lead is re-registered manually through the website tracking link, tied to the Sales Director.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth prog"><span class="sdot"></span>In progress</div>'+
+           '<p class="m-note"><b>Campaign-code priority bug</b> &mdash; the predefined code on the tracking link is overridden by the system&rsquo;s default code, so the source isn&rsquo;t captured as intended (the same bug as the website path). Ops + dev are actively fixing it.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-shead"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div><div class="m-who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 6.3a3 3 0 0 1 0 5.6"/><path d="M17.5 19a5.5 5.5 0 0 0-2-4.2"/></svg>Confirm with <b>Ops + Dev</b></div></div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>Between today&rsquo;s fully-manual process and the 2.0 integration, is there an <b>interim connector or partial automation</b> that could cut the manual step sooner &mdash; or are we fully manual until the integration ships?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>Through the manual re-registration, do <b>both codes survive</b> &mdash; the <b>campaign code</b> (currently hit by the priority bug) and the <b>sales rep code</b>?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">3</span><span>Through the <b>one generic Sales-Director link</b>, does the <b>specific Meta campaign / ad survive</b> &mdash; or does everything collapse into a single source, so we can&rsquo;t tell which ad or campaign drove which lead?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">4</span><span><b>How fast</b> does a Meta lead reach sales this way? <b>Speed-to-lead</b> is decisive &mdash; and Meta only retains leads ~90 days, so sporadic manual pulls can <b>lose leads outright</b>, not just delay them. What&rsquo;s the lag?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">5</span><span>When a lead is manually re-registered, does the process <b>check whether that person already exists</b> (an existing lead or client) before creating a new record &mdash; or could we be creating <b>duplicates</b> that split attribution and misroute the lead?</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth road"><span class="sdot"></span>2.0 &mdash; the target</div>'+
+           '<p class="m-note"><b>Meta &rarr; CRM integration</b> &mdash; connect Meta Lead Forms directly into the CRM to remove the manual step entirely. Daidi&rsquo;s stated long-term target; timeline TBC with Ops + dev.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Get Meta leads into the CRM fast and with attribution intact &mdash; ideally automated (Meta &rarr; CRM), so there&rsquo;s no manual gap, no dropped codes, and sales gets the lead while it&rsquo;s still hot.</p>'+
+           '<p class="m-note">This is the most fragile point in the Meta path &mdash; closing it is what makes the whole channel measurable.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Close the Meta &rarr; CRM gap so the lead lands quickly with its full source.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Confirm the route in (manual vs integration)</span>'+
+           '<span class="m-goal"><i></i>Both codes survive into the CRM</span>'+
+           '<span class="m-goal"><i></i>Fast allocation to sales (no cold leads)</span>'+
+           '</div>'+
+           '</div></div>'},
+
+    "m4": {num:"4", title:"Joins main journey", owner:"sal",
+      chips:[{t:"Same as Website tab"}],
+      body:'<div class="m-sec"><div class="m-sth lock"><span class="sdot"></span>Locked</div>'+
+           '<p class="m-note">Once registered, the Meta lead follows the same downstream as the website path &mdash; KYC &rarr; account active &rarr; IB conversion &mdash; <b>including the attribution break at IB conversion</b>, where the campaign code is overwritten by the sales IB code. Everything in the <b>Website Journey</b> tab&rsquo;s cards 4&ndash;6 applies here too.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-shead"><div class="m-sth open"><span class="sdot"></span>Open &mdash; to confirm</div><div class="m-who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 6.3a3 3 0 0 1 0 5.6"/><path d="M17.5 19a5.5 5.5 0 0 0-2-4.2"/></svg>Confirm with <b>OP / SO / BO</b></div></div>'+
+           '<div class="m-qlist">'+
+           '<div class="m-qitem"><span class="m-qnum">1</span><span>Does a <b>Meta-sourced lead enter at the same point</b> as a website lead (registration in the system) and behave <b>identically downstream</b> &mdash; or are there differences in KYC, activation, or IB conversion for a Meta-origin lead?</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">2</span><span>Can we <b>follow Meta leads through to FTD and IB</b> to judge this channel on <b>cost per funded client / IB</b>, not just cost per lead &mdash; even if it means <b>matching leads to IBs manually for now</b> (since source is lost at IB conversion)? Instant Form leads skew high-volume / low-intent, so cheap leads that never fund would flatter the numbers.</span></div>'+
+           '<div class="m-qitem"><span class="m-qnum">3</span><span>Going deeper than channel level: can we tie a <b>funded IB back to the specific Meta audience / ad</b> that produced it &mdash; so budget shifts toward the segments that actually generate funded IBs, not just the cheapest leads? That&rsquo;s optimising for revenue, not lead volume.</span></div>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-sth road"><span class="sdot"></span>2.0 &mdash; the target</div>'+
+           '<p class="m-note"><b>Dedicated IB registration link</b> &mdash; raised as an idea to preserve full-funnel source through the entire IB lifecycle. Edwin noted there&rsquo;s no precedent for it yet, so it needs validation. Full downstream detail lives in the <b>Website Journey</b> tab.</p></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">What ACQ wants to achieve</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">One unified downstream &mdash; a Meta lead tracked exactly like a website lead, all the way to IB, so we never map or chase it twice.</p>'+
+           '<p class="m-note">Both front doors, one funnel from registration onward &mdash; and one attribution fix that serves them both.</p>'+
+           '<p class="m-note">And see this channel&rsquo;s true worth &mdash; what it costs to produce a funded client / IB, not just a lead.</p>'+
+           '</div></div>'+
+           '<div class="m-div"></div>'+
+           '<div class="m-sec"><div class="m-label">Objective</div>'+
+           '<div class="m-objbody">'+
+           '<p class="m-note">Confirm the convergence and make sure the Meta lead&rsquo;s source survives the same downstream it now shares with the website path.</p>'+
+           '<div class="m-goals">'+
+           '<span class="m-goal"><i></i>Confirm the convergence point (registration)</span>'+
+           '<span class="m-goal"><i></i>Meta lead behaves identically downstream</span>'+
+           '<span class="m-goal"><i></i>Source survives all the way to IB</span>'+
+           '<span class="m-goal"><i></i>Follow leads to FTD / IB to judge cost per funded client</span>'+
            '</div>'+
            '</div></div>'}
   };
@@ -573,15 +826,44 @@
     if(e.key === "Escape" && backdrop.classList.contains("open")){ closeModal(); }
   });
 
-  // auto-walk highlight
-  if(reduce){ cards.forEach(function(c){ c.classList.add("on"); }); }
-  else {
-    var i = 0;
+  // --- tab switching ---
+  var tabBtns = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  var viewEls = {
+    website: document.getElementById("view-website"),
+    meta:    document.getElementById("view-meta")
+  };
+  var activeView = "website";
+  var walkCards = [];
+  var wi = 0;
+  function refreshWalkCards(){
+    walkCards = Array.prototype.slice.call(viewEls[activeView].querySelectorAll(".card"));
+    wi = 0;
+    if(reduce){ cards.forEach(function(c){ c.classList.remove("on"); }); walkCards.forEach(function(c){ c.classList.add("on"); }); }
+  }
+  function switchView(name){
+    if(name === activeView || !viewEls[name]) return;
+    activeView = name;
+    Object.keys(viewEls).forEach(function(k){ viewEls[k].classList.toggle("hide", k !== name); });
+    tabBtns.forEach(function(t){
+      var on = t.getAttribute("data-view") === name;
+      t.classList.toggle("on", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    if(!reduce){ cards.forEach(function(c){ c.classList.remove("on"); }); }
+    refreshWalkCards();
+  }
+  tabBtns.forEach(function(t){
+    t.addEventListener("click", function(){ switchView(t.getAttribute("data-view")); });
+  });
+
+  // --- auto-walk highlight (scoped to active view) ---
+  refreshWalkCards();
+  if(!reduce){
     setInterval(function(){
-      if(paused) return;
-      cards.forEach(function(c){ c.classList.remove("on"); });
-      cards[i].classList.add("on");
-      i = (i + 1) % cards.length;
+      if(paused || !walkCards.length) return;
+      walkCards.forEach(function(c){ c.classList.remove("on"); });
+      walkCards[wi % walkCards.length].classList.add("on");
+      wi = (wi + 1) % walkCards.length;
     }, 1400);
   }
 })();
